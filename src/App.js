@@ -8,7 +8,7 @@ import Home from './components/Home';
 
 function App() {
 
-  const url = 'http://localhost:8000';
+  const url = 'https://radiant-journey-78711.herokuapp.com';
 
   const [characters, setCharacters] = useState(null);
   const [updated, setUpdated] = useState(false);
