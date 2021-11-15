@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 function Character({character, url, setUpdated, updated}) {
 
+
     const defaultCharacterState = {
         name: character.name,
         character_class: character.character_class,
@@ -16,7 +17,8 @@ function Character({character, url, setUpdated, updated}) {
         WIS: character.WIS,
         CHA: character.CHA,
         equipment: character.equipment.split(', '),
-        spells: character.spells.split(', ')
+        spells: character.spells.split(', '),
+        level: character.level,
     }
 
     const [characterState, setCharacterState] = useState(defaultCharacterState);
@@ -26,6 +28,7 @@ function Character({character, url, setUpdated, updated}) {
     const [editEquipment, setEditEquipment] = useState(false);
     const [editSpells, setEditSpells] = useState(false);
     const [newItem, setNewItem] = useState('');
+    const [editLevel, setEditLevel] = useState(false);
 
     const handleInput = (e) => {
         setNewItem(e.target.value);
@@ -72,6 +75,30 @@ function Character({character, url, setUpdated, updated}) {
         setCharacterState({...characterState, [e.target.id]: e.target.value});
     }
 
+    const handleLevelEdit = () => {
+        if (editLevel) {
+            const updatedCharacter = {...characterState, equipment: characterState.equipment.join(', '), spells: characterState.spells.join(', ')}
+            axios.put(`${url}/characters/${character.id}`, updatedCharacter)
+                .then(res => {
+                    setEditStats(false);
+                    setEditSkills(false);
+                    setEditEquipment(false);
+                    setEditSpells(false);
+                    setUpdated(!updated);
+                })
+                .catch(console.error);
+        }
+        setEditLevel(!editLevel)
+    }
+
+    const handleLevelChange = (e) => {
+        if (e.target.id === 'dec') {
+            setCharacterState({...characterState, level: characterState.level - 1});
+        } else {
+            setCharacterState({...characterState, level: characterState.level + 1});
+        }
+    }
+
     const editCharacter = () => {
         const updatedCharacter = {...characterState, equipment: characterState.equipment.join(', '), spells: characterState.spells.join(', ')}
         axios.put(`${url}/characters/${character.id}`, updatedCharacter)
@@ -94,8 +121,28 @@ function Character({character, url, setUpdated, updated}) {
        return (
         <div className='Character'>
             <div className='character-header'>
-                <h2>{characterState.name}</h2>
-                <h4 className='italic'>{characterState.character_class}</h4>
+                <div className='character-name-and-class'>
+                    <h2 className='char-name'>{characterState.name}</h2>
+                    <h4 className='italic char-class'>{characterState.character_class}</h4>
+                </div>
+                <div className='level-div'>
+                {(editLevel) && 
+                    <div>
+                        {(characterState.level > 1) &&
+                            <button className='level-buttons' type='button' onClick={handleLevelChange}><i id='dec' class="fas fa-minus-circle"></i></button>
+                        }
+                    </div>
+                }
+                <h4 className={`char-level ${(editLevel) ? 'dotted' : null}`} onClick={handleLevelEdit}>{characterState.level}</h4>
+                {(editLevel) &&
+                    <div >
+                        {(characterState.level < 20) &&
+                            <button className='level-buttons' type='button' onClick={handleLevelChange}><i id='inc' class="fas fa-plus-circle"></i></button>
+                        }
+                    </div>
+                }
+                </div>
+                
             </div>
             
             <hr />
