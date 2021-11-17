@@ -297,6 +297,18 @@ function Character({character, url, setUpdated, updated}) {
                     </div>
                 }
             </div>
+            {(characterState.character_class === 'conjurer' || characterState.character_class === 'cleric') &&
+                <div className='spell-slots'>
+                    <h4>spell slots</h4>
+                    {(characterState.level >= 1) && 
+                        <div>
+                            <h6>lvl 1 spells</h6>
+                            
+                        </div>
+                    }
+
+                </div>
+            }
         </div>
         ); 
     } else {

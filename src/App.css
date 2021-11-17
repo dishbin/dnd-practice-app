@@ -87,6 +87,7 @@
 .character-name-and-class {
   height: 60px;
   padding: none;
+  text-align: left;
 }
 
 .char-name {
@@ -94,6 +95,7 @@
   margin-bottom: none;
   padding: none;
   transform: translateY(-12px);
+  text-decoration: underline;
 }
 
 .char-class {
